@@ -10,13 +10,27 @@ data/johnson-and-johnson.csv: data
 		https://raw.githubusercontent.com/marcopeix/AppliedTimeSeriesAnalysisWithPython/main/data/jj.csv \
 		> data/johnson-and-johnson.csv
 
-fetch-data: data/johnson-and-johnson.csv
+data/GOOGL.csv: data
+	curl \
+		'https://query1.finance.yahoo.com/v7/finance/download/GOOGL?period1=1588032000&period2=1619481600&interval=1d&events=history&includeAdjustedClose=true' \
+		> data/GOOGL.csv
+
+fetch-data: data/johnson-and-johnson.csv data/GOOGL.csv
+
+setup:
+	conda create -n .venv python=3.9.5
+
+activate:
+	conda activate
 
 install:
-	python -m pip install pipenv
+	conda install \
+		jupyter \
+		pandas \
+		matplotlib \
+		numpy \
+		statsmodels \
+		scikit-learn
 
-build: install
-	python -m pipenv install
-
-all: build
-	python -m pipenv run jupyter notebook
+all: install
+	jupyter notebook
